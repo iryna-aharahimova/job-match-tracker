@@ -1,6 +1,7 @@
 package com.example.jobmatchtracker.entity;
 
 import com.example.jobmatchtracker.enums.JobGrade;
+import com.example.jobmatchtracker.enums.WorkMode;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -51,7 +52,14 @@ public class JobProfile extends AbstractEntity {
     @Column(name = "grade")
     private Set<JobGrade> preferredGrades = new HashSet<>();
 
-    private String location;
+    @ElementCollection(targetClass = WorkMode.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name = "job_profile_work_modes",
+            joinColumns = @JoinColumn(name = "job_profile_id")
+    )
+    @Column(name = "work_mode")
+    private Set<WorkMode> workModes = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -62,7 +70,6 @@ public class JobProfile extends AbstractEntity {
         return "JobProfile(" +
                 "id=" + getId() +
                 ", profileName=" + profileName +
-                ", location=" + location +
                 ", createdAt=" + createdAt +
                 ")";
     }
